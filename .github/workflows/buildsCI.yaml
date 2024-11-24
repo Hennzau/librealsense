@@ -8,16 +8,6 @@ on:
 
 permissions: read-all
 
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  LRS_BUILD_CONFIG: Debug
-  LRS_RUN_CONFIG: Release
-  LRS_RUN_WITH_DEB_CONFIG: RelWithDebInfo
-  PYTHON_PATH: C:\\hostedtoolcache\\windows\\Python\\3.8.1\\x64\\python.exe
-  # GH-Actions Windows VM currently supply ~14 GB available on D drive, and ~80 GB on drive C.
-  # Building LRS statically with third parties is too much for drive D so we clone to drive 'D' and build on drive 'C'
-  WIN_BUILD_DIR: C:/lrs_build
-
 jobs:
   #--------------------------------------------------------------------------------
   ubuntu:
@@ -46,9 +36,13 @@ jobs:
           cd build
           cmake .. -DBUILD_PYTHON_BINDINGS=bool:true -DFORCE_RSUSB_BACKEND=true -DCMAKE_BUILD_TYPE=release -DPYTHON_EXECUTABLE=$(which python3) -DBUILD_SHARED_LIBS=false -DBUILD_EXAMPLES=false -DBUILD_TOOLS=false -DCHECK_FOR_UPDATES=false
           cmake --build . -- -j4
+          cp build/release/pyrealsense2.* ../wrappers/python/pyrealsense2/
+          cd ../wrappers/python
+          $(which python3) -m pip install -r requirements.txt
+          $(which python3) setup.py bdist_wheel
 
       - name: Upload RS log artifact
         uses: actions/upload-artifact@v3
         with:
-          name: shared object - ubuntu
-          path: build/release/pyrealsense2.*
+          name: Wheel - ubuntu
+          path: wrappers/python/dist/pyrealsense2-*.whl
