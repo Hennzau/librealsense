@@ -45,7 +45,7 @@ jobs:
           cmake --build . --config Release -- -m
 
           cp ${{env.WIN_BUILD_DIR}}/Release/*.pyd wrappers/python/pyrealsense2/
-          cd ${LRS_SRC_DIR}/wrappers/python/
+          cd wrappers/python/
           ${{env.PYTHON_PATH}} -m pip install -r requirements.txt
           ${{env.PYTHON_PATH}} setup.py bdist_wheel
 
