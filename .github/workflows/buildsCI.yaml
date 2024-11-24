@@ -41,7 +41,7 @@ jobs:
           $(which python3) -m pip install -r requirements.txt
           $(which python3) setup.py bdist_wheel
 
-      - name: Upload RS log artifact
+      - name: Upload Wheel artifact
         uses: actions/upload-artifact@v3
         with:
           name: Wheel - ubuntu
