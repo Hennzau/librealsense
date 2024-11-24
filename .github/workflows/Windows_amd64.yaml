@@ -44,7 +44,7 @@ jobs:
           cd ${{env.WIN_BUILD_DIR}}
           cmake --build . --config Release -- -m
 
-          cp ${{env.WIN_BUILD_DIR}}/Release/*.pyd ${LRS_SRC_DIR}/wrappers/python/pyrealsense2/
+          cp ${{env.WIN_BUILD_DIR}}/Release/*.pyd wrappers/python/pyrealsense2/
           cd ${LRS_SRC_DIR}/wrappers/python/
           ${{env.PYTHON_PATH}} -m pip install -r requirements.txt
           ${{env.PYTHON_PATH}} setup.py bdist_wheel
@@ -53,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Wheel - ubuntu
-          path: ${LRS_SRC_DIR}/wrappers/python/*.whl
+          path: wrappers/python/*.whl
