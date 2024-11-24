@@ -7,7 +7,7 @@ permissions: read-all
 
 jobs:
   #--------------------------------------------------------------------------------
-  ubuntu:
+  macos:
     runs-on: macos-latest-arm64
     timeout-minutes: 60
     steps:
@@ -15,14 +15,11 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.12"
+
       - name: Prebuild
         shell: bash
         run: |
           mkdir build
-          # install coreutils for greadlink use
-          brew install coreutils
-          brew install homebrew/core/glfw3;
-          brew list libusb || brew install libusb;
 
       - name: Build
         shell: bash
