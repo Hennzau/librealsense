@@ -1,4 +1,4 @@
-name: Windows_x86_64
+name: Windows_amd64
 
 on:
   workflow_dispatch:

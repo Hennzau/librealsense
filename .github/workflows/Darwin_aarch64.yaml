@@ -1,0 +1,43 @@
+name: Darwin_aarch64
+
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  #--------------------------------------------------------------------------------
+  ubuntu:
+    runs-on: macos-latest-arm64
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+      - name: Prebuild
+        shell: bash
+        run: |
+          mkdir build
+          # install coreutils for greadlink use
+          brew install coreutils
+          brew install homebrew/core/glfw3;
+          brew list libusb || brew install libusb;
+
+      - name: Build
+        shell: bash
+        run: |
+          cd build
+          cmake .. -DBUILD_PYTHON_BINDINGS=bool:true -DFORCE_RSUSB_BACKEND=true -DCMAKE_BUILD_TYPE=release -DPYTHON_EXECUTABLE=$(which python3) -DBUILD_SHARED_LIBS=false -DBUILD_EXAMPLES=false -DBUILD_TOOLS=false -DCHECK_FOR_UPDATES=false
+          cmake --build . -- -j4
+          ls release/
+          cp release/pyrealsense2.* ../wrappers/python/pyrealsense2/
+          cd ../wrappers/python
+          $(which python3) -m pip install -r requirements.txt
+          $(which python3) setup.py bdist_wheel
+
+      - name: Upload Wheel artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Wheel - ubuntu
+          path: wrappers/python/dist/pyrealsense2-*.whl
