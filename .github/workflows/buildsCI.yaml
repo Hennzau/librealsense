@@ -50,5 +50,5 @@ jobs:
       - name: Upload RS log artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Log file - ubuntu
-          path: build/*.log
+          name: shared object - ubuntu
+          path: build/release/pyrealsense2.*
